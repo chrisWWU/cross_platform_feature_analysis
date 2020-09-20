@@ -130,4 +130,5 @@ dmypy.json
 
 # other
 *.csv
+.idea*
 .idea
