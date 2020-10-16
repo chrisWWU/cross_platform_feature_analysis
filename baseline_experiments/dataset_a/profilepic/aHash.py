@@ -7,6 +7,10 @@ import numpy as np
 def ahash(path_connection):
     """calculates profilepic similarity through image hashing + hamming distance"""
     connect = pd.read_csv(path_connection, index_col=0)
+
+    # make results reproducible
+    connect = connect.sort_values(by='twitterusername').reset_index(drop=True)
+
     result = pd.DataFrame(columns=['flickrid', 'twitterusername'])
 
     fl_paths = connect['fl_path']
@@ -18,6 +22,7 @@ def ahash(path_connection):
     for i in range(len(fl_paths)):
         print(f'{i + 1} / {len(fl_paths)}')
 
+        # subtract fl image hash from tw image hash to get hamming distance
         res = [imagehash.average_hash(Image.open(fl_paths[i])) - imagehash.average_hash(Image.open(j)) for j in tw_paths]
 
         index_min = np.argmin(res)

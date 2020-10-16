@@ -15,12 +15,29 @@ def compare_friends(path_fl, path_tw, path_connect, threshold):
     fl_lists = os.listdir(path_fl)
     tw_lists = os.listdir(path_tw)
 
+    # only keep users with friends
+    fl_lists = [x for x in fl_lists if not pd.read_csv(path_fl + x).empty]
+    tw_lists = [x for x in tw_lists if not pd.read_csv(path_tw + x).empty]
+
     # get list of flickr ids / twitterusername
     fl_ids = [clear_csv(i) for i in fl_lists]
     tw_names = [clear_csv(i) for i in tw_lists]
 
     # read connect
     connect = pd.read_csv(path_connect, index_col=0)
+
+    # delete users without friends from connect df
+    connect = connect[connect['flickrid'].isin(fl_ids)].reset_index(drop=True)
+    connect = connect[connect['twitterusername'].isin(tw_names)].reset_index(drop=True)
+
+    # make results reproducible
+    connect = connect.sort_values(by='twitterusername').reset_index(drop=True)
+
+    fl_ids = connect['flickrid'].tolist()
+    tw_names = connect['twitterusername'].tolist()
+
+    fl_lists = [x + '.csv' for x in fl_ids]
+    tw_lists = [x + '.csv' for x in tw_names]
 
     fl_names = []
 
@@ -88,38 +105,27 @@ if __name__ == '__main__':
     dataset = 'dataset_b'
     path_fl = f'../../../graph_processing/{dataset}/baseline/flickr/'
     path_tw = f'../../../graph_processing/{dataset}/baseline/twitter/'
-    path_connect = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/7_combined_connection.csv'
+    path_connect = f'../../../../data/{dataset}/connection.csv'
     threshold = 3
 
     compare_friends(path_fl, path_tw, path_connect, threshold)
 
 """
-Levenshtein 1
-364 / 3796
-0.0958904109589041
+ Levenshtein - Dataset B (threshold = 2)
+ 478 / 2959
+ 0.16154106116931397
 
-Levenshtein 2
-446 / 3796
-0.11749209694415173
+Levenshtein - Dataset B (threshold = 3)
+ 497 / 2959
+ 0.1679621493747888
 
-levenshtein 2
-439 / 3796
-0.11564805057955743
+Levenshtein - Dataset B (threshold = 4)
+ 461 / 2959
+ 0.15579587698546807
 
-Levenshtein 3
-446 / 3796
-0.11749209694415173
-
-464 / 3796 (local)
-0.12223393045310854
-
-levenshtein 4
-407 / 3796
-0.10721812434141201
-
-Levenshtein 5
-286 / 3796
-0.07534246575342465
+Levenshtein - Dataset B (threshold = 5)
+ 331 / 2959
+ 0.1118621155795877
 """
 
 

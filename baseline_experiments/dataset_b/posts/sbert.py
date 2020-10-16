@@ -10,6 +10,9 @@ def sbert_posts(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path
     fl, tw, connect = prepro(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path_fl_pics,
                              path_fl_descript, path_tweets, path_tweet_pics)
 
+    # make results reproducible
+    connect = connect.sort_values(by='twitterusername').reset_index(drop=True)
+
     # Compute embedding for both lists
     fl_sentence_embeddings = model.encode(fl, convert_to_tensor=True)
     tw_sentence_embeddings = model.encode(tw, convert_to_tensor=True)
@@ -45,80 +48,81 @@ def sbert_posts(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path
 
 
 if __name__ == '__main__':
-    path_connect = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/7_combined_connection.csv'
-    path_fl_pics = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/flickr/flickr_pic_tags_cross_osn/'
-    path_fl_descript = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/flickr/photo_descriptions/'
-    path_tweets = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/twitter/tweets/'
-    path_tweet_pics = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/twitter/pred_tweet_pics_cross_osn/'
+    dataset = 'dataset_b'
+    path_connect = f'../../../../data/{dataset}/connection.csv'
+    path_fl_pics = f'../../../../data/{dataset}/flickr/flickr_pic_tags/'
+    path_fl_descript = f'../../../../data/{dataset}/flickr/flickr_photo_descriptions/'
+    path_tweets = f'../../../../data/{dataset}/twitter/tweets/'
+    path_tweet_pics = f'../../../../data/{dataset}/twitter/tweet_pic_tags/'
     model_names = ['bert-base-nli-mean-tokens', 'distilbert-base-nli-stsb-mean-tokens']
     model = SentenceTransformer(model_names[0])  # 0 or 1
     fl_keywords = True  # decide which data to consider (if both fl options are false fl_descriptions are utilized)
-    fl_descriptions = True  # tweet text is always used, additionally tweet keywords can be considered
-    tweet_keywords = True
+    fl_descriptions = False  # tweet text is always used, additionally tweet keywords can be considered
+    tweet_keywords = False
 
     sbert_posts(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path_fl_pics, path_fl_descript, path_tweets,
                 path_tweet_pics, model)
 
     """ bert-base-nli-mean-tokens
     with all data
-    sbert + cosine similarity - Dataset A
-    3 / 57
-    0.05263157894736842
+    sbert + cosine similarity - Dataset B
+    26 / 2301
+    0.011299435028248588
 
     without flickr keywords
-    sbert + cosine similarity - Dataset A
-    3 / 57
-    0.05263157894736842
+    sbert + cosine similarity - Dataset B
+    27 / 2445
+    0.011042944785276074
 
     without flickr description
-    sbert + cosine similarity - Dataset A
-    2 / 58
-    0.034482758620689655
+    sbert + cosine similarity - Dataset B
+    7 / 2325
+    0.003010752688172043
 
     without twitter keywords
-    sbert + cosine similarity - Dataset A
-    8 / 106
-    0.07547169811320754
+    sbert + cosine similarity - Dataset B
+    35 / 4931
+    0.007097951733928209
 
     without keywords
-    sbert + cosine similarity - Dataset A
-    8 / 108
-    0.07407407407407407
+    sbert + cosine similarity - Dataset B
+    36 / 5233
+    0.006879419071278425
 
     without fl_descriptions and without twitter keywords
-    sbert + cosine similarity - Dataset A
-    4 / 107
-    0.037383177570093455
+    sbert + cosine similarity - Dataset B
+    9 / 4983
+    0.001806140878988561
     """
 
     """ distilbert-base-nli-stsb-mean-tokens
         with all data
-    sbert + cosine similarity - Dataset A
-    3 / 57
-    0.05263157894736842
+    sbert + cosine similarity - Dataset B
+    28 / 2301
+    0.012168622338113864
 
     without flickr keywords
-    sbert + cosine similarity - Dataset A
-    3 / 57
-    0.05263157894736842
+    sbert + cosine similarity - Dataset B
+    30 / 2445
+    0.012269938650306749
 
     without flickr description
-    sbert + cosine similarity - Dataset A
-    1 / 58
-    0.017241379310344827
+    sbert + cosine similarity - Dataset B
+    10 / 2325
+    0.004301075268817204
 
     without twitter keywords
-    sbert + cosine similarity - Dataset A
-    12 / 106
-    0.11320754716981132
+    sbert + cosine similarity - Dataset B
+    34 / 4931
+    0.006895153112958832
 
     without keywords
-    sbert + cosine similarity - Dataset A
-    12 / 108
-    0.1111111111111111
+    sbert + cosine similarity - Dataset B
+    37 / 5233
+    0.007070514045480604
 
     without fl_descriptions and without twitter keywords
-    sbert + cosine similarity - Dataset A
-    4 / 107
-    0.037383177570093455
+    sbert + cosine similarity - Dataset B
+    7 / 4983
+    0.0014047762392133253
     """

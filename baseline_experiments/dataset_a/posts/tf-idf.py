@@ -11,13 +11,16 @@ def tfidf_posts(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path
     fl, tw, connect = prepro(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path_fl_pics,
                              path_fl_descript, path_tweets, path_tweet_pics)
 
+    # make results reproducible
+    connect = connect.sort_values(by='twitterusername').reset_index(drop=True)
+
     # stem words
     ps = PorterStemmer()
     fl = [ps.stem(x) for x in fl]
     tw = [ps.stem(x) for x in tw]
 
-    vectorizer = TfidfVectorizer(strip_accents='unicode', lowercase=True, stop_words='english', max_df=0.7,
-                                 max_features=5000)
+    vectorizer = TfidfVectorizer(strip_accents='unicode', lowercase=True, stop_words='english', max_df=0.7)
+                                 #max_features=5000)
     vector_fl = vectorizer.fit_transform(fl)
     vector_tw = vectorizer.transform(tw)
 
@@ -56,14 +59,16 @@ def tfidf_posts(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path
 
 
 if __name__ == '__main__':
-    path_connect = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/flickr/csv_flickr/6_connection_flickr_dataset.csv'
-    path_fl_pics = '/Users/kiki/sciebo/image_tagging/personality/flickr/flickr_pic_tags_personality/'
-    path_fl_descript = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/flickr/photo_descriptions/'
-    path_tweets = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/twitter_matching_flickr/csv_twitter/tweets/'
-    path_tweet_pics = '/Users/kiki/sciebo/image_tagging/personality/twitter/pred_tweet_pics_personality/'
+    dataset = 'dataset_a'
+
+    path_connect = f'../../../../data/{dataset}/connection.csv'
+    path_fl_pics = f'../../../../data/{dataset}/flickr/flickr_pic_tags/'
+    path_fl_descript = f'../../../../data/{dataset}/flickr/flickr_photo_descriptions/'
+    path_tweets = f'../../../../data/{dataset}/twitter/tweets/'
+    path_tweet_pics = f'../../../../data/{dataset}/twitter/tweet_pic_tags/'
     fl_keywords = True
     fl_descriptions = False
-    tweet_keywords = True
+    tweet_keywords = False
 
     tfidf_posts(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path_fl_pics, path_fl_descript, path_tweets,
                 path_tweet_pics)

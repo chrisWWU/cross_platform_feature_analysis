@@ -10,6 +10,9 @@ def sbert_posts(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path
     fl, tw, connect = prepro(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path_fl_pics,
                              path_fl_descript, path_tweets, path_tweet_pics)
 
+    # make results reproducible
+    connect = connect.sort_values(by='twitterusername').reset_index(drop=True)
+
     # Compute embedding for both lists
     fl_sentence_embeddings = model.encode(fl, convert_to_tensor=True)
     tw_sentence_embeddings = model.encode(tw, convert_to_tensor=True)
@@ -45,15 +48,17 @@ def sbert_posts(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path
 
 
 if __name__ == '__main__':
-    path_connect = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/flickr/csv_flickr/6_connection_flickr_dataset.csv'
-    path_fl_pics = '/Users/kiki/sciebo/image_tagging/personality/flickr/flickr_pic_tags_personality/'
-    path_fl_descript = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/flickr/photo_descriptions/'
-    path_tweets = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/twitter_matching_flickr/csv_twitter/tweets/'
-    path_tweet_pics = '/Users/kiki/sciebo/image_tagging/personality/twitter/pred_tweet_pics_personality/'
+    dataset = 'dataset_a'
+
+    path_connect = f'../../../../data/{dataset}/connection.csv'
+    path_fl_pics = f'../../../../data/{dataset}/flickr/flickr_pic_tags/'
+    path_fl_descript = f'../../../../data/{dataset}/flickr/flickr_photo_descriptions/'
+    path_tweets = f'../../../../data/{dataset}/twitter/tweets/'
+    path_tweet_pics = f'../../../../data/{dataset}/twitter/tweet_pic_tags/'
     model_names = ['bert-base-nli-mean-tokens', 'distilbert-base-nli-stsb-mean-tokens']
     model = SentenceTransformer(model_names[1])  # 0 or 1
-    fl_keywords = True
-    fl_descriptions = False
+    fl_keywords = False
+    fl_descriptions = True
     tweet_keywords = False
 
     sbert_posts(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path_fl_pics, path_fl_descript, path_tweets,

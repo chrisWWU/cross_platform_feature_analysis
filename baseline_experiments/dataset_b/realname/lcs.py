@@ -8,6 +8,9 @@ def lcs_realname(path_connection):
     # read data
     df = pd.read_csv(path_connection, index_col=0, lineterminator='\n')
 
+    # make results reproducible
+    df = df.sort_values(by='twitterusername').reset_index(drop=True)
+
     # extract usernames
     fl_names = df['flickrusername'].tolist()
     tw_names = df['twitterusername'].tolist()

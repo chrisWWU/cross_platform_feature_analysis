@@ -18,6 +18,9 @@ def jaccard_bio(path_connection):
     # read data
     df = pd.read_csv(path_connection, index_col=0, lineterminator='\n')
 
+    # make results reproducible
+    df = df.sort_values(by='twitterusername').reset_index(drop=True)
+
     # extract usernames
     fl_names = df['flickrusername'].tolist()
     tw_names = df['twitterusername'].tolist()
@@ -68,21 +71,12 @@ def jaccard_bio(path_connection):
 
 
 if __name__ == '__main__':
-    path_connection = 'bio_connection_cross_osn.csv'
+    path_connection = 'bio_connection_dataset_b.csv'
 
     jaccard_bio(path_connection)
 
-# correct: 202 / 2960
-# percentage: 0.06824324324324324
 
 """
-with clean bios
-Jaccard - Dataset B
-220 / 2879
-0.07641542202153526
-
-
-Final:
 Jaccard - Dataset B
 235 / 2880
 0.08159722222222222

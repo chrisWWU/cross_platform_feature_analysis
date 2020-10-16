@@ -109,13 +109,16 @@ def execute(path_fl, path_tw, path_connect, path_to, flickr_standard, twitter_st
 
 
 if __name__ == '__main__':
-    path_connect = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/7_combined_connection.csv'
-    path_fl = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/flickr/profile_pics_flickr/'
-    path_tw = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/twitter/profile_pics_twitter/'
-    path_to = 'profilepic_connection_cross_osn.csv'
+    dataset = 'dataset_a'
 
-    flickr_standard = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/flickr/profile_pics_flickr/7147511@N02.jpg'
-    twitter_standard = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/twitter/profile_pics_twitter/_holzmann.jpg'
-    csv = True
+    path_connect = f'../../../../data/{dataset}/connection.csv'
+    path_fl = f'../../../../data/{dataset}/flickr/flickr_profilepics/'
+    path_tw = f'../../../../data/{dataset}/twitter/twitter_profilepics/'
+
+    path_to = 'profilepic_connection_personality.csv'
+
+    flickr_standard = '../../../../data/{dataset}/flickr/flickr_profilepics/7147511@N02.jpg'
+    twitter_standard = '../../../../data/{dataset}/twitter/twitter_profilepics/_holzmann.jpg'
+    csv = False
 
     execute(path_fl, path_tw, path_connect, path_to, flickr_standard, twitter_standard, csv)

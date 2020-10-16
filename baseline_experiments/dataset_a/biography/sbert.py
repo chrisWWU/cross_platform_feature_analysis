@@ -4,11 +4,14 @@ import torch
 import numpy as np
 
 
-def bert_bio(path_connection, model):
+def bert_bio(path_connection, model, model_name):
     """calculate matching using Sentence Bert embeddings and cosine similarity"""
 
     # read data
     df = pd.read_csv(path_connection, index_col=0, lineterminator='\n')
+
+    # make results reproducible
+    df = df.sort_values(by='twitterusername').reset_index(drop=True)
 
     # extract usernames
     fl_names = df['flickrusername'].tolist()
@@ -48,11 +51,12 @@ def bert_bio(path_connection, model):
 
 
 if __name__ == '__main__':
-    path_connection = 'bio_connection_personality.csv'
+    path_connection = 'bio_connection_dataset_a.csv'
     model_names = ['bert-base-nli-mean-tokens', 'distilbert-base-nli-stsb-mean-tokens']
-    model = SentenceTransformer(model_names[1])  # 0 or 1
+    i = 1  # 0 or 1
+    model = SentenceTransformer(model_names[i])
 
-    bert_bio(path_connection, model)
+    bert_bio(path_connection, model, model_names[i])
 
 
     """

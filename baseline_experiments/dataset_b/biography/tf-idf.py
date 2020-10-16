@@ -12,6 +12,9 @@ def tfidf(path_connection):
     # read data
     df = pd.read_csv(path_connection, index_col=0, lineterminator='\n')
 
+    # make results reproducible
+    df = df.sort_values(by='twitterusername').reset_index(drop=True)
+
     # extract usernames
     fl_names = df['flickrusername'].tolist()
     tw_names = df['twitterusername'].tolist()
@@ -61,22 +64,17 @@ def tfidf(path_connection):
 
 
 if __name__ == '__main__':
-    path_connection = 'bio_connection_cross_osn.csv'
+    path_connection = 'bio_connection_dataset_b.csv'
 
     tfidf(path_connection)
 
-
-    """
-    tf-idf + cosine similarity - Dataset A
+    """    
+    tf-idf + cosine similarity - Dataset B 
+    no limit on features (18672)
     425 / 2880
     0.14756944444444445
     
-    
-    with stemmer
-    tf-idf + cosine similarity - Dataset B
-    425 / 2880
-    0.14756944444444445
-    
+    tf-idf + cosine similarity - Dataset B 
     max features = number of observations:
     262 / 2880
     0.09097222222222222

@@ -15,12 +15,29 @@ def compare_friends(path_fl, path_tw, path_connect, threshold):
     fl_lists = os.listdir(path_fl)
     tw_lists = os.listdir(path_tw)
 
+    # only keep users with friends
+    fl_lists = [x for x in fl_lists if not pd.read_csv(path_fl + x).empty]
+    tw_lists = [x for x in tw_lists if not pd.read_csv(path_tw + x).empty]
+
     # get list of flickr ids / twitterusername
     fl_ids = [clear_csv(i) for i in fl_lists]
     tw_names = [clear_csv(i) for i in tw_lists]
 
     # read connect
     connect = pd.read_csv(path_connect, index_col=0)
+
+    # delete users without friends from connect df
+    connect = connect[connect['flickrid'].isin(fl_ids)].reset_index(drop=True)
+    connect = connect[connect['twitterusername'].isin(tw_names)].reset_index(drop=True)
+
+    # make results reproducible
+    connect = connect.sort_values(by='twitterusername').reset_index(drop=True)
+
+    fl_ids = connect['flickrid'].tolist()
+    tw_names = connect['twitterusername'].tolist()
+
+    fl_lists = [x + '.csv' for x in fl_ids]
+    tw_lists = [x + '.csv' for x in tw_names]
 
     fl_names = []
 
@@ -35,7 +52,7 @@ def compare_friends(path_fl, path_tw, path_connect, threshold):
     c = 0
     for fl_user in fl_lists:  # iterate through flickr users
         print(fl_user)
-        print(f'{c + 1} / {len(fl_lists)}')
+        print(f'{c+1} / {len(fl_lists)}')
 
         fl = pd.read_csv(path_fl + fl_user)
         fl = fl['flickrusername']
@@ -72,13 +89,13 @@ def compare_friends(path_fl, path_tw, path_connect, threshold):
         # append pair to result
         result.loc[c] = [fl_names[c], tw_names[ind]]
 
-        c += 1
+        c +=1
 
     df1 = result.merge(connect, on=['flickrusername', 'twitterusername'], how='left', indicator='Exist')
     df1['Exist'] = np.where(df1.Exist == 'both', True, False)
     cor = df1['Exist'].sum()
 
-    print(f'lcs - Dataset A (threshold = {threshold})')
+    print(f'LCS - Dataset B (threshold = {threshold})')
     print(f'{cor} / {len(df1)}')  # correct / total
     print(cor / len(df1))  # accuracy
 
@@ -87,27 +104,16 @@ if __name__ == '__main__':
     dataset = 'dataset_a'
     path_fl = f'../../../graph_processing/{dataset}/baseline/flickr/'
     path_tw = f'../../../graph_processing/{dataset}/baseline/twitter/'
-    path_connect = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/flickr/csv_flickr/6_connection_flickr_dataset.csv'
-    threshold = 3
+    path_connect = f'../../../../data/{dataset}/connection.csv'
+    threshold = 3  # 2 / 3 / 4 / 5 / 6
 
     compare_friends(path_fl, path_tw, path_connect, threshold)
 
 """
-lcs - Dataset A (threshold = 1)
-3 / 10
-0.3
-
-lcs - Dataset A (threshold = 2)
-3 / 10
-0.3
-
-lcs - Dataset A (threshold = 3)
-3 / 10
-0.3
 
 lcs - Dataset A (threshold = 4)
-3 / 10
-0.3
+3 / 4
+0.75
 """
 
 

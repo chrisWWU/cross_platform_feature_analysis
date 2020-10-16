@@ -12,6 +12,9 @@ def tfidf_posts(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path
     fl, tw, connect = prepro(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path_fl_pics, path_fl_descript,
                              path_tweets, path_tweet_pics)
 
+    # make results reproducible
+    connect = connect.sort_values(by='twitterusername').reset_index(drop=True)
+
     # stem words
     ps = PorterStemmer()
     fl = [ps.stem(x) for x in fl]
@@ -57,62 +60,52 @@ def tfidf_posts(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path
 
 
 if __name__ == '__main__':
-    path_connect = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/7_combined_connection.csv'
-    path_fl_pics = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/flickr/flickr_pic_tags_cross_osn/'
-    path_fl_descript = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/flickr/photo_descriptions/'
-    path_tweets = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/twitter/tweets/'
-    path_tweet_pics = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/twitter/pred_tweet_pics_cross_osn/'
+    dataset = 'dataset_b'
+
+    path_connect = f'../../../../data/{dataset}/connection.csv'
+    path_fl_pics = f'../../../../data/{dataset}/flickr/flickr_pic_tags/'
+    path_fl_descript = f'../../../../data/{dataset}/flickr/flickr_photo_descriptions/'
+    path_tweets = f'../../../../data/{dataset}/twitter/tweets/'
+    path_tweet_pics = f'../../../../data/{dataset}/twitter/tweet_pic_tags/'
     # decide which data to consider (if both fl options are false fl_descriptions are utilized)
-    fl_keywords = False
-    fl_descriptions = True
+    fl_keywords = True
+    fl_descriptions = False
     # tweet text is always used, additionally tweet keywords can be considered
     tweet_keywords = False
 
     tfidf_posts(fl_keywords, fl_descriptions, tweet_keywords, path_connect, path_fl_pics, path_fl_descript, path_tweets,
                 path_tweet_pics)
 
-    """
-    with all data with stemming
-    tf-idf + cosine similarity - Dataset B
-    166 / 2301
-    0.07214254671881791
 
-    without flickr keywords with stemming
+    """ unlimited features:
+    with all data
     tf-idf + cosine similarity - Dataset B
-    164 / 2445
-    0.0670756646216769
-
-    without flickr description with stemming
+    254 / 2301
+    0.11038678835289005
+    
+    without flickr keywords
+    tf-idf + cosine similarity - Dataset B
+    259 / 2445
+    0.10593047034764826
+    
+    without flickr description
     tf-idf + cosine similarity - Dataset B
     22 / 2325
     0.00946236559139785
-
-    without twitter keywords with stemming
-    tf-idf + cosine similarity - Dataset B
-    216 / 4931
-    0.04380450212938552
     
-    without keywords with stemming
+    without twitter keywords
     tf-idf + cosine similarity - Dataset B
-    215 / 5233
-    0.04108541945346837
-
-    without fl_descriptions and without twitter keywords with stemming
-    tf-idf + cosine similarity - Dataset B
-    15 / 4983
-    0.0030102347983142685
-
-    """
-
-    """
-    with 10.000 features
+    413 / 4931
+    0.08375583046035287
+    
     without keywords
-    tf-idf + cosine similarity - Dataset B
-    272 / 5233
-    0.05197783298299255
-    
-    with unlimited features
     tf-idf + cosine similarity - Dataset B
     417 / 5233
     0.07968660424230843
+    
+    without fl_descriptions and without twitter keywords
+    tf-idf + cosine similarity - Dataset B
+    15 / 4983
+    0.0030102347983142685
+    
     """

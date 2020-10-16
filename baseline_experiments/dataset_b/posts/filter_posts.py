@@ -1,8 +1,7 @@
 import pandas as pd
 from os import listdir
 from os.path import isfile, join
-from clean_post import clean_posts
-import pickle
+from baseline_experiments.dataset_b.posts.clean_post import clean_posts
 
 
 def remove_csv(string):
@@ -27,6 +26,7 @@ def match_posted_content(path_fl_pics, path_fl_descript, path_tweets, path_tweet
 
     # flickr pics ----------------------------------------------------
     fl_pics = [f for f in listdir(path_fl_pics) if isfile(join(path_fl_pics, f))]
+    fl_pics = [f for f in fl_pics if not f.startswith('.')]
 
     fl_pics_dict = {}
     for user in fl_pics:

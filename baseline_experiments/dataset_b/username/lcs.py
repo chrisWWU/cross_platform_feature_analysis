@@ -9,6 +9,9 @@ def lcs_username(path_connection):
     # read data
     df = pd.read_csv(path_connection, index_col=0, lineterminator='\n')
 
+    # make results reproducible
+    df = df.sort_values(by='twitterusername').reset_index(drop=True)
+
     # extract usernames
     fl_names = df['flickrusername'].tolist()
     tw_names = df['twitterusername'].tolist()
@@ -47,12 +50,12 @@ def lcs_username(path_connection):
 
 
 if __name__ == '__main__':
-    path_connection = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/7_combined_connection.csv'
+    dataset = 'dataset_b'
+    path_connect = f'../../../../data/{dataset}/connection.csv'
+    lcs_username(path_connect)
 
-    lcs_username(path_connection)
-
-    """
-    lcs - Dataset B
-    3482 / 5924
-    0.587778528021607
-    """
+"""
+lcs - Dataset B
+3430 / 5924
+0.5790006752194463
+"""

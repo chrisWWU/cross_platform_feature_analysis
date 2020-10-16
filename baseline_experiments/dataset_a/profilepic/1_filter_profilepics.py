@@ -109,13 +109,17 @@ def execute(path_fl, path_tw, path_connect, path_to, flickr_standard, twitter_st
 
 
 if __name__ == '__main__':
-    path_connect = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/flickr/csv_flickr/6_connection_flickr_dataset.csv'
-    path_fl = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/flickr/profile_pics_flickr/'
-    path_tw = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/twitter_matching_flickr/profile_pics_twitter/'
+
+    dataset = 'dataset_a'
+
+    path_connect = f'../../../../data/{dataset}/connection.csv'
+    path_fl = f'../../../../data/{dataset}/flickr/flickr_profilepics/'
+    path_tw = f'../../../../data/{dataset}/twitter/twitter_profilepics/'
+
     path_to = 'profilepic_connection_personality.csv'
 
-    flickr_standard = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/flickr/profile_pics_flickr/55578087@N08.jpg'
-    twitter_standard = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/twitter_matching_flickr/profile_pics_twitter/shardproducton.jpg'
-    csv = True
+    flickr_standard = '../../../../data/{dataset}/flickr/flickr_profilepics/55578087@N08.jpg'
+    twitter_standard = '../../../../data/{dataset}/twitter/twitter_profilepics/shardproducton.jpg'
+    csv = False
 
     execute(path_fl, path_tw, path_connect, path_to, flickr_standard, twitter_standard, csv)

@@ -30,11 +30,11 @@ def create_core_user_lists(path_fl, path_tw, path_to_fl, path_to_tw, path_connec
 
 if __name__ == '__main__':
 
-    # personality (dataset a)
+    dataset = 'dataset_a'
     path_fl = '../gephi_lists/flickr/flickr_core_edgelist.csv'
     path_tw = '../gephi_lists/twitter/twitter_core_edgelist.csv'
     path_to_fl = f'flickr/'
     path_to_tw = f'twitter/'
-    path_connect = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/flickr/csv_flickr/6_connection_flickr_dataset.csv'
+    path_connect = f'../../../../data/{dataset}/connection.csv'
 
     create_core_user_lists(path_fl, path_tw, path_to_fl, path_to_tw, path_connect)

@@ -6,7 +6,7 @@ def clear_filename2(filename):
     return filename.replace('_following.csv', '')
 
 
-def get_tw_nodelist(path_fl, path_connection, path_fl_nodelist, path_fl_core_nodelist, csv):
+def get_tw_nodelist(path_tw, path_connection, path_tw_nodelist, path_tw_core_nodelist, csv):
     """
     creates complete nodelist with labels 'core' and 'follow' readable by Gephi
     creates core nodelist containing flickrids usernames labels etc.
@@ -16,7 +16,7 @@ def get_tw_nodelist(path_fl, path_connection, path_fl_nodelist, path_fl_core_nod
     core_names = []
 
     # iterate all .csv 'following' files, each file belongs to one core user
-    for filename in os.listdir(path_fl):
+    for filename in os.listdir(path_tw):
 
         # append id to core user list
         core_names.append(clear_filename2(filename))
@@ -25,7 +25,7 @@ def get_tw_nodelist(path_fl, path_connection, path_fl_nodelist, path_fl_core_nod
         names = names.append(pd.Series(clear_filename2(filename)))
 
         # read following info
-        df = pd.read_csv(path_fl + filename, index_col=0)
+        df = pd.read_csv(path_tw + filename, index_col=0)
 
         if not df.empty:
             # append friend (following) contacts to complete id series
@@ -55,20 +55,26 @@ def get_tw_nodelist(path_fl, path_connection, path_fl_nodelist, path_fl_core_nod
     core_nodelist['label'] = core_nodelist['id']
 
     if csv:
-        #nodelist.to_csv(path_fl_nodelist, index=False)
-        core_nodelist.to_csv(path_fl_core_nodelist, index=False)
+        #nodelist.to_csv(path_tw_nodelist, index=False)
+        core_nodelist.to_csv(path_tw_core_nodelist, index=False)
 
 
-def get_tw_edgelist(path_tw, path_tw_edgelist, path_tw_core_edgelist, csv):
+def get_tw_edgelist(path_tw, path_connection, path_tw_edgelist, path_tw_core_edgelist, csv):
     """
     creates complete edgelist
     creates core edgelist
     """
+    # read connection info
+    connect = pd.read_csv(path_connection, index_col=0)
+
     core_names = []
     edge_list = pd.DataFrame(columns=['source', 'target'])
 
+    # only keep files that are in connect
+    filenames = [x for x in os.listdir(path_tw) if clear_filename2(x) in connect['twitterusername'].values]
+
     # iterate through all twitter follow files
-    for filename in os.listdir(path_tw):
+    for filename in filenames:
 
         # each file name is a core node name
         core_names.append(clear_filename2(filename))
@@ -99,15 +105,16 @@ def get_tw_edgelist(path_tw, path_tw_edgelist, path_tw_core_edgelist, csv):
 
 
 if __name__ == '__main__':
+    dataset = 'dataset_a'
     path_tw = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/twitter_matching_flickr/csv_twitter/following/'
     path_tw_nodelist = 'twitter_nodelist.csv'
     path_tw_core_nodelist = 'twitter_core_nodelist.csv'
     path_tw_edgelist = 'twitter_edgelist.csv'
     path_tw_core_edgelist = 'twitter_core_edgelist.csv'
-    path_connection = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/flickr/csv_flickr/6_connection_flickr_dataset.csv'
+    path_connect = f'../../../../data/{dataset}/connection.csv'
     csv = True
 
     get_tw_nodelist(path_tw, path_connection, path_tw_nodelist, path_tw_core_nodelist, csv)
-    get_tw_edgelist(path_tw, path_tw_edgelist, path_tw_core_edgelist, csv)
+    get_tw_edgelist(path_tw, path_connection, path_tw_edgelist, path_tw_core_edgelist, csv)
 
 

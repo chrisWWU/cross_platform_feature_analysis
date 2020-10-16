@@ -15,6 +15,9 @@ def remove_twitter_pic_link(s):
     ind = 0
     while ind != -1:
         ind = s.find('pic.twitter.com/')
+        if ind == -1:
+            break
+        # delete pic.twitter link (in total always 27 chars)
         s = s[:ind] + s[ind+27:]
     return s
 

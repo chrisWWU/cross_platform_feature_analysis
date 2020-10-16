@@ -59,16 +59,22 @@ def get_fl_nodelist(path_fl, path_connection, path_fl_nodelist, path_fl_core_nod
         core_nodelist.to_csv(path_fl_core_nodelist, index=False)
 
 
-def get_fl_edgelist(path_fl, path_fl_edgelist, path_fl_core_edgelist, csv):
+def get_fl_edgelist(path_fl, path_connection, path_fl_edgelist, path_fl_core_edgelist, csv):
     """
     creates complete edgelist
     creates core edgelist
     """
+    # read connection info
+    connect = pd.read_csv(path_connection, index_col=0)
+
     core_ids = []
     edge_list = pd.DataFrame(columns=['source', 'target'])
 
+    # only keep files that are in connect
+    filenames = [x for x in os.listdir(path_fl) if clear_filename(x) in connect['flickrid'].values]
+
     # iterate through all twitter follow files
-    for filename in os.listdir(path_fl):
+    for filename in filenames:
 
         # each file name is a core node name
         core_ids.append(clear_filename(filename))
@@ -99,13 +105,14 @@ def get_fl_edgelist(path_fl, path_fl_edgelist, path_fl_core_edgelist, csv):
 
 
 if __name__ == '__main__':
+    dataset = 'dataset_a'
     path_fl = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/flickr/following_flickr/'
     path_fl_nodelist = 'flickr_nodelist.csv'
     path_fl_core_nodelist = 'flickr_core_nodelist.csv'
     path_fl_edgelist = 'flickr_edgelist.csv'
     path_fl_core_edgelist = 'flickr_core_edgelist.csv'
-    path_connection = '/Users/kiki/sciebo/personality_trait_paper/flickr_and_twitter/flickr/csv_flickr/6_connection_flickr_dataset.csv'
-    csv = True
+    path_connection = f'../../../../data/{dataset}/connection.csv'
+    csv = False
 
-    get_fl_edgelist(path_fl, path_fl_edgelist, path_fl_core_edgelist, csv)
-    get_fl_nodelist(path_fl, path_connection, path_fl_nodelist, path_fl_core_nodelist, csv)
+    get_fl_edgelist(path_fl, path_connection, path_fl_edgelist, path_fl_core_edgelist, csv)
+    #get_fl_nodelist(path_fl, path_connection, path_fl_nodelist, path_fl_core_nodelist, csv)

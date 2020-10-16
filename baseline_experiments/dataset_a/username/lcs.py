@@ -9,6 +9,9 @@ def lcs_username(path_connection):
     # read data
     df = pd.read_csv(path_connection, index_col=0, lineterminator='\n')
 
+    # make results reproducible
+    df = df.sort_values(by='twitterusername').reset_index(drop=True)
+
     # extract usernames
     fl_names = df['flickrusername'].tolist()
     tw_names = df['twitterusername'].tolist()
@@ -47,12 +50,14 @@ def lcs_username(path_connection):
 
 
 if __name__ == '__main__':
-    path_connection = '/Users/kiki/sciebo/personality_cross_platform/1_get_active_profiles/6_connection_flickr_dataset.csv'
 
-    lcs_username(path_connection)
+    dataset = 'dataset_a'
+    path_connect = f'../../../../data/{dataset}/connection.csv'
+
+    lcs_username(path_connect)
 
     """
     lcs - Dataset A
-    78 / 118
-    0.6610169491525424
+    75 / 118
+    0.635593220338983
     """

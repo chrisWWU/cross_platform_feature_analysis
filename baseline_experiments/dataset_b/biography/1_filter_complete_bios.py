@@ -82,10 +82,11 @@ def create_connect_bio(path_flickr_info, path_twitter_info, path_connect, path_t
 
 
 if __name__ == '__main__':
-    path_flickr_info = '/Users/kiki/sciebo/cross_osn/2_check_active/7_combined_flickr_info.csv'
-    path_twitter_info = '/Users/kiki/sciebo/cross_osn/3_collect_data/twitter/1_twitter_bio_info.csv'
-    path_connect = '/Users/kiki/sciebo/cross_osn/2_check_active/7_combined_connection.csv'
-    path_to = 'bio_connection_cross_osn.csv'
-    csv = True
+    dataset = 'dataset_b'
+    path_flickr_info = f'../../../../data/{dataset}/flickr/flickr_info.csv'
+    path_twitter_info = f'../../../../data/{dataset}/twitter/twitter_info.csv'
+    path_connect = f'../../../../data/{dataset}/connection.csv'
+    path_to = f'bio_connection_{dataset}.csv'
+    csv = False
 
     create_connect_bio(path_flickr_info, path_twitter_info, path_connect, path_to)

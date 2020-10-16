@@ -15,12 +15,29 @@ def compare_friends(path_fl, path_tw, path_connect, threshold):
     fl_lists = os.listdir(path_fl)
     tw_lists = os.listdir(path_tw)
 
+    # only keep users with friends
+    fl_lists = [x for x in fl_lists if not pd.read_csv(path_fl + x).empty]
+    tw_lists = [x for x in tw_lists if not pd.read_csv(path_tw + x).empty]
+
     # get list of flickr ids / twitterusername
     fl_ids = [clear_csv(i) for i in fl_lists]
     tw_names = [clear_csv(i) for i in tw_lists]
 
     # read connect
     connect = pd.read_csv(path_connect, index_col=0)
+
+    # delete users without friends from connect df
+    connect = connect[connect['flickrid'].isin(fl_ids)].reset_index(drop=True)
+    connect = connect[connect['twitterusername'].isin(tw_names)].reset_index(drop=True)
+
+    # make results reproducible
+    connect = connect.sort_values(by='twitterusername').reset_index(drop=True)
+
+    fl_ids = connect['flickrid'].tolist()
+    tw_names = connect['twitterusername'].tolist()
+
+    fl_lists = [x + '.csv' for x in fl_ids]
+    tw_lists = [x + '.csv' for x in tw_names]
 
     fl_names = []
 
@@ -78,7 +95,7 @@ def compare_friends(path_fl, path_tw, path_connect, threshold):
     df1['Exist'] = np.where(df1.Exist == 'both', True, False)
     cor = df1['Exist'].sum()
 
-    print(f'lcs - Dataset B (threshold = {threshold})')
+    print(f'LCS - Dataset B (threshold = {threshold})')
     print(f'{cor} / {len(df1)}')  # correct / total
     print(cor / len(df1))  # accuracy
 
@@ -88,12 +105,26 @@ if __name__ == '__main__':
     dataset = 'dataset_b'
     path_fl = f'../../../graph_processing/{dataset}/baseline/flickr/'
     path_tw = f'../../../graph_processing/{dataset}/baseline/twitter/'
-    path_connect = '/Users/kiki/Desktop/casia_cross_osn_local_data_IMPORTANT/7_combined_connection.csv'
-    threshold = 2
+    path_connect = f'../../../../data/{dataset}/connection.csv'
+    threshold = 5
 
     compare_friends(path_fl, path_tw, path_connect, threshold)
 
 
 """
-lcs threshold 1
+ LCS - Dataset B (threshold = 3)
+ 184 / 2959
+ 0.06218316998986144
+
+ LCS - Dataset B (threshold = 4)
+ 401 / 2959
+ 0.1355187563366002
+
+ LCS - Dataset B (threshold = 5)
+ 484 / 2959
+ 0.16356877323420074
+
+ LCS - Dataset B (threshold = 6)
+ 387 / 2959
+ 0.1307874281851977
 """
