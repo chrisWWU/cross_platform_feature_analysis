@@ -118,8 +118,8 @@ if __name__ == '__main__':
 
     path_to = 'profilepic_connection_personality.csv'
 
-    flickr_standard = '../../../../data/{dataset}/flickr/flickr_profilepics/55578087@N08.jpg'
-    twitter_standard = '../../../../data/{dataset}/twitter/twitter_profilepics/shardproducton.jpg'
+    flickr_standard = f'../../../../data/{dataset}/flickr/flickr_profilepics/55578087@N08.jpg'
+    twitter_standard = f'../../../../data/{dataset}/twitter/twitter_profilepics/shardproducton.jpg'
     csv = False
 
     execute(path_fl, path_tw, path_connect, path_to, flickr_standard, twitter_standard, csv)
